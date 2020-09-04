@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.com.eventhorizon.brewersfriendproxy</groupId>
+    <artifactId>brewersfriend-proxy</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <description>Brewers Friend Proxy API</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>functions</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <!--General properties -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.minimum.maven.version>3.3.9</project.minimum.maven.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <skipUnitTests>false</skipUnitTests>
+        <skipBddTests>true</skipBddTests>
+        <fasterxml.version>2.10.2</fasterxml.version>
+
+        <!-- Plugin Versions -->
+        <maven.versions.version>2.8.1</maven.versions.version>
+        <maven.clean.version>3.1.0</maven.clean.version>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
+        <maven.resources.version>3.1.0</maven.resources.version>
+        <maven.deploy.version>3.0.0-M1</maven.deploy.version>
+        <maven.install.version>3.0.0-M1</maven.install.version>
+        <maven.enforcer.version>3.0.0-M3</maven.enforcer.version>
+        <maven.shade.version>3.2.4</maven.shade.version>
+        <maven.shade.plugin.log4j2.version>2.8.1</maven.shade.plugin.log4j2.version>
+        <maven.surefire.version>3.0.0-M5</maven.surefire.version>
+        <maven.dependency.version>3.1.2</maven.dependency.version>
+        <maven.jar.version>3.2.0</maven.jar.version>
+        <maven.site.version>3.9.1</maven.site.version>
+        <jbehave.version>4.7</jbehave.version>
+
+        <!-- Dependency Versions -->
+        <junit.version>4.13</junit.version>
+        <fasterxml.version>2.10.2</fasterxml.version>
+        <mockito.version>1.10.19</mockito.version>
+
+        <aws.java.sdk.version>2.14.10</aws.java.sdk.version>
+        <aws.lambda.java.core.version>1.2.1</aws.lambda.java.core.version>
+        <aws.lambda.java.log4j2.version>1.0.0</aws.lambda.java.log4j2.version>
+
+        <hamcrest.all.version>1.3</hamcrest.all.version>
+        <jbehave.core.version>4.6.1</jbehave.core.version>
+        <reflections.version>0.9.12</reflections.version>
+        <jbehave.junit.runner.version>2.3.0</jbehave.junit.runner.version>
+        <log4j.core.version>2.8.2</log4j.core.version>
+        <log4j.api.version>2.8.2</log4j.api.version>
+        <jacoco.plugin.version>0.8.3</jacoco.plugin.version>
+        <yaml.version>1.25</yaml.version>
+        <activation.version>1.1.1</activation.version>
+        <jersey-client.version>2.30.1</jersey-client.version>
+        <jackson-module-jaxb-annotations.version>2.10.2</jackson-module-jaxb-annotations.version>
+    </properties>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <!-- Versions Plugin -->
+                <!-- This plugin help to find the latest version of plugins and dependencies.
+                Check some commands bellow:
+                - Check plugin updates: mvn versions:display-plugin-updates
+                - Check dependency updates: mvn versions:display-dependency-updates
+                -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${maven.versions.version}</version>
+                    <configuration>
+                        <generateBackupPoms>false</generateBackupPoms>
+                    </configuration>
+                </plugin>
+
+                <!-- Clean Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven.clean.version}</version>
+                </plugin>
+
+                <!-- Compiler Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                    <configuration>
+                        <fork>true</fork>
+                        <executable>${java.home}/bin/javac</executable>
+                    </configuration>
+                </plugin>
+
+                <!-- Resources Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.version}</version>
+                </plugin>
+
+                <!-- Deploy Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven.deploy.version}</version>
+                </plugin>
+
+                <!-- Install Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven.install.version}</version>
+                </plugin>
+
+                <!-- Enforcer Plugin -->
+                <!-- This plugin is used to enforce a minimum version of Maven that is required from
+                the plugins used within this project. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven.enforcer.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-maven</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>${project.minimum.maven.version}</version>
+                                    </requireMavenVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Shade Plugin -->
+                <!-- From Maven documentation: This plugin provides the capability to package the
+                artifact in an uber-jar, including its dependencies and to shade - i.e. rename - the
+                packages of some of the dependencies. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven.shade.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <!--Transformer is needed when using shade plugin. For more info check-->
+                                <!--https://github.com/aws/aws-lambda-java-libs/tree/master/aws-lambda-java-log4j2-->
+                                <transformers>
+                                    <transformer
+                                            implementation="com.github.edwgiz.mavenShadePlugin.log4j2CacheTransformer.PluginsCacheFileTransformer">
+                                    </transformer>
+                                </transformers>
+                                <shadeTestJar>true</shadeTestJar>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <!--Transformer is needed when using shade plugin. For more info check-->
+                            <!--https://github.com/aws/aws-lambda-java-libs/tree/master/aws-lambda-java-log4j2-->
+                            <groupId>com.github.edwgiz</groupId>
+                            <artifactId>maven-shade-plugin.log4j2-cachefile-transformer</artifactId>
+                            <version>${maven.shade.plugin.log4j2.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <!-- Surefire Plugin -->
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.version}</version>
+                    <configuration>
+                        <skipTests>${skipUnitTests}</skipTests>
+                    </configuration>
+                </plugin>
+
+                <!-- Dependency Plugin -->
+                <!-- The dependency plugin provides the capability to manipulate artifacts.
+                It can copy and/or unpack artifacts from local or remote repositories to a specified
+                location. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven.dependency.version}</version>
+                    <executions>
+                        <execution>
+                            <id>copy-dependencies</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/dependencies
+                                </outputDirectory>
+                                <overWriteReleases>false</overWriteReleases>
+                                <overWriteSnapshots>false</overWriteSnapshots>
+                                <overWriteIfNewer>true</overWriteIfNewer>
+                                <includeScope>test</includeScope>
+                                <includeTypes>so,dll,dylib</includeTypes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Jar Plugin -->
+                <!-- This plugin is used to generate a jar with the test code, so we can have
+                dependency on test code between modules -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Site Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven.site.version}</version>
+                </plugin>
+
+                <!-- JBehave Plugin -->
+                <plugin>
+                    <groupId>org.jbehave</groupId>
+                    <artifactId>jbehave-maven-plugin</artifactId>
+                    <version>${jbehave.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- Enforcer Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
+            <!-- Shade Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+
+            <!-- Dependency Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- JUnit -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- fasterxml -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${fasterxml.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!-- Mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- AWS -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-lambda-java-core</artifactId>
+                <version>${aws.lambda.java.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-lambda-java-log4j2</artifactId>
+                <version>${aws.lambda.java.log4j2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b11</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.api.version}</version>
+            </dependency>
+
+            <!-- JBehave -->
+            <dependency>
+                <groupId>org.jbehave</groupId>
+                <artifactId>jbehave-core</artifactId>
+                <version>${jbehave.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.valfirst</groupId>
+                <artifactId>jbehave-junit-runner</artifactId>
+                <version>${jbehave.junit.runner.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <!-- ========================================================== -->
+            <!-- Code Coverage with Jacoco -->
+            <!--  to activate codeCoverage for either UnitTests, IntegrationTests or both, include this profile -->
+            <!--  mvn clean [test|...|verify|install] -P UnitTests,CodeCoverage -->
+            <!--  mvn clean [test|...|verify|install] -P IntegrationTests,CodeCoverage -->
+            <!--  mvn clean [test|...|verify|install] -P UnitTests,IntegrationTests,CodeCoverage -->
+            <!-- ============================================================== -->
+            <id>CodeCoverage</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Activate code coverage -->
+                <skipCodeCoverage>false</skipCodeCoverage>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <!-- Prepares the property pointing to the JaCoCo runtime agent which
+                                is passed as VM argument when Maven the Surefire plugin is executed. -->
+                            <execution>
+                                <id>pre-unit-test</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${skipCodeCoverage}</skip>
+
+                                    <!-- Sets the path to the file which contains the execution data. -->
+                                    <destFile>${coverageDest}/jacoco_ut.exec</destFile>
+                                    <append>true</append>
+                                    <!-- DON'T add below property as a configuration but add in properties
+                                        section Please refer to : http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html
+                                        <propertyName>surefireArgLine</propertyName> -->
+                                </configuration>
+                            </execution>
+                            <!-- Ensures that the code coverage report for unit tests is created
+                                after unit tests have been run. -->
+                            <execution>
+                                <id>post-unit-test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${skipCodeCoverage}</skip>
+
+                                    <!-- Sets the path to the file which contains the execution data. -->
+                                    <dataFile>${coverageDest}/jacoco_ut.exec</dataFile>
+                                    <!-- Sets the output directory for the code coverage report. -->
+                                    <outputDirectory>${coverageDest}/jacoco-ut
+                                    </outputDirectory>
+                                </configuration>
+                            </execution>
+
+                            <!-- ========================================================== -->
+                            <!-- Coverage for tests defined as integration tests -->
+                            <!-- ========================================================== -->
+                            <!-- Prepares the property pointing to the JaCoCo runtime agent which
+                                is passed as VM argument when Maven the Failsafe plugin is executed. -->
+                            <execution>
+                                <id>pre-integration-test</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${skipCodeCoverage}</skip>
+                                    <!-- Sets the path to the file which contains the execution data. -->
+                                    <destFile>${coverageDest}/jacoco_it.exec</destFile>
+                                    <append>true</append>
+                                    <!-- Sets the name of the property containing the settings for JaCoCo
+                                        runtime agent. <propertyName>failsafeArgLine</propertyName> -->
+                                </configuration>
+                            </execution>
+                            <!-- Ensures that the code coverage report for integration tests after
+                                integration tests have been run. -->
+                            <execution>
+                                <id>post-integration-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${skipCodeCoverage}</skip>
+                                    <!-- Sets the path to the file which contains the execution data. -->
+                                    <dataFile>${coverageDest}/jacoco_it.exec</dataFile>
+                                    <!-- Sets the output directory for the code coverage report. -->
+                                    <outputDirectory>${coverageDest}/jacoco-it
+                                    </outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ============================================================== -->
+        <!-- BddTests Tests - Activate -->
+        <!-- mvn clean [test|...|verify|install] -P BddTests -->
+        <!-- mvn clean [test|...|verify|install] -DskipBddTests=false -->
+        <!-- ============================================================== -->
+        <profile>
+            <id>BddTests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skipBddTests>false</skipBddTests>
+            </properties>
+        </profile>
+    </profiles>
+</project>
